@@ -3,6 +3,8 @@ import data from "../data";
 import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import logger from "use-reducer-logger";
+import { Row ,Col} from "react-bootstrap";
+import Product from "../components/Product";
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -65,25 +67,13 @@ export default function HomeScreen() {
         ) : error ? (
           <div>{error}</div>
         ) : (
-          data.products.map((product) => (
-            <div className="product" key={product.slug}>
-              <a href={`/product/${product.slug}`}>
-                <img src={product.image} alt={product.name} />
-              </a>
-
-              <div className="product-info">
-                <a href={`/product/${product.slug}`}>
-                  <p>{product.name}</p>
-                </a>
-
-                <p>
-                  {" "}
-                  <strong>${product.price}</strong>
-                </p>
-                <button>Add to cart</button>
-              </div>
-            </div>
-          ))
+          <Row>
+            {products.map((product) => (
+              <Col sm={6} md={4} lg={3} className="mb-3">
+               <Product product={product}/>
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </div>

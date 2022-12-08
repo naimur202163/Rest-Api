@@ -9,14 +9,16 @@ import { LinkContainer } from "react-router-bootstrap";
 export default function App() {
   return (
     <BrowserRouter>
-      <div>
-        <Navbar bg="dark" variant="dark">
-          <Container>
-            <LinkContainer to="/">
-              <Navbar.Brand>Amozona</Navbar.Brand>
-            </LinkContainer>
-          </Container>
-        </Navbar>
+      <div className="d-flex flex-column site-container">
+        <header>
+          <Navbar bg="dark" variant="dark">
+            <Container>
+              <LinkContainer to="/">
+                <Navbar.Brand>Amozona</Navbar.Brand>
+              </LinkContainer>
+            </Container>
+          </Navbar>
+        </header>
 
         <main>
           <Routes>
@@ -26,7 +28,7 @@ export default function App() {
         </main>
 
         <footer>
-          
+          <div className="text-center">All rights reserved</div>
         </footer>
       </div>
     </BrowserRouter>

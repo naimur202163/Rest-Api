@@ -11,6 +11,7 @@ import {
   Button,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
+import { Helmet } from "react-helmet-async";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -76,9 +77,9 @@ export default function ProductScreen() {
         </Col>
         <Col md={3}>
           <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h1>{product.name}</h1>
-            </ListGroup.Item>
+            <Helmet>
+              <title>{product.name}</title>
+            </Helmet>
             <ListGroup.Item>
               <Rating rating={product.rating} numReviews={product.numReviews} />
             </ListGroup.Item>

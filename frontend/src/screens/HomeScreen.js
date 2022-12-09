@@ -3,8 +3,9 @@ import data from "../data";
 import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import logger from "use-reducer-logger";
-import { Row ,Col} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
+import { Helmet } from "react-helmet-async";
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -59,6 +60,9 @@ export default function HomeScreen() {
   console.log(products);
   return (
     <div>
+      <Helmet>
+        <title>amazona</title>
+      </Helmet>
       <h1>Featured Products</h1>
 
       <div className="products">
@@ -70,7 +74,7 @@ export default function HomeScreen() {
           <Row>
             {products.map((product) => (
               <Col sm={6} md={4} lg={3} className="mb-3">
-               <Product product={product}/>
+                <Product product={product} />
               </Col>
             ))}
           </Row>

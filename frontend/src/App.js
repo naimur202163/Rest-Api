@@ -21,10 +21,12 @@ export default function App() {
         </header>
 
         <main>
-          <Routes>
-            <Route path="/product/:slug" element={<ProductScreen />} />
-            <Route path="/" element={<HomeScreen />}></Route>
-          </Routes>
+          <Container>
+            <Routes>
+              <Route path="/product/:slug" element={<ProductScreen />} />
+              <Route path="/" element={<HomeScreen />}></Route>
+            </Routes>
+          </Container>
         </main>
 
         <footer>

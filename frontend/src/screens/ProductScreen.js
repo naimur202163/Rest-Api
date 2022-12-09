@@ -1,6 +1,8 @@
 import { React, useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Col, ListGroup, Row } from "react-bootstrap";
+import Rating from "../components/Rating";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -60,7 +62,24 @@ export default function ProductScreen() {
     <div>{error}</div>
   ) : (
     <div>
-        {product.name}
+      <Row>
+        <Col md={6}>
+          <img className="img-large" src={product.image} alt={product.name} />
+        </Col>
+        <Col md={3}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h1>{product.name}</h1>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Rating rating={product.rating} numReviews={product.numReviews} />
+            </ListGroup.Item>
+            <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Description: {product.description}</ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col md={3}></Col>
+      </Row>
     </div>
   );
 }

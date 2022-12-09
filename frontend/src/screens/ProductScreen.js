@@ -1,7 +1,15 @@
 import { React, useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Col, ListGroup, Row } from "react-bootstrap";
+import {
+  Badge,
+  Card,
+  Col,
+  ListGroup,
+  ListGroupItem,
+  Row,
+  Button,
+} from "react-bootstrap";
 import Rating from "../components/Rating";
 
 const reducer = (state, action) => {
@@ -78,7 +86,41 @@ export default function ProductScreen() {
             <ListGroup.Item>Description: {product.description}</ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={3}></Col>
+        <Col md={3}>
+          <Card>
+            <Card.Body>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Price:</Col>
+                    <Col>${product.price}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Status:</Col>
+                    <Col>
+                      {product.countInStock > 0 ? (
+                        <Badge bg="success">In stock</Badge>
+                      ) : (
+                        <Badge bg="danger">Not In stock</Badge>
+                      )}
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+                {/* Rendering */}
+
+                {product.countInStock > 0 && (
+                  <ListGroupItem>
+                    <div className="d-grid">
+                      <Button variant="primary">Add to Cart</Button>
+                    </div>
+                  </ListGroupItem>
+                )}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
     </div>
   );

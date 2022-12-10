@@ -1,108 +1,116 @@
-import React, { useContext, useReducer, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { Store } from '../Store';
-import { toast } from 'react-toastify';
-import { getError } from '../utils';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { logout, update } from '../actions/userActions';
+import { listMyOrders } from '../actions/orderActions';
+import { useDispatch, useSelector } from 'react-redux';
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'UPDATE_REQUEST':
-      return { ...state, loadingUpdate: true };
-    case 'UPDATE_SUCCESS':
-      return { ...state, loadingUpdate: false };
-    case 'UPDATE_FAIL':
-      return { ...state, loadingUpdate: false };
-
-    default:
-      return state;
-  }
-};
-
-export default function ProfileScreen() {
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { userInfo } = state;
-  const [name, setName] = useState(userInfo.name);
-  const [email, setEmail] = useState(userInfo.email);
+function ProfileScreen(props) {
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
 
-  const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
-    loadingUpdate: false,
-  });
-
-  const submitHandler = async (e) => {
+  const userSignin = useSelector(state => state.userSignin);
+  const { userInfo } = userSignin;
+  const handleLogout = () => {
+    dispatch(logout());
+    props.history.push("/signin");
+  }
+  const submitHandler = (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.put(
-        '/api/users/profile',
-        {
-          name,
-          email,
-          password,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
-      dispatch({
-        type: 'UPDATE_SUCCESS',
-      });
-      ctxDispatch({ type: 'USER_SIGNIN', payload: data });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      toast.success('User updated successfully');
-    } catch (err) {
-      dispatch({
-        type: 'FETCH_FAIL',
-      });
-      toast.error(getError(err));
-    }
-  };
+    dispatch(update({ userId: userInfo._id, email, name, password }))
+  }
+  const userUpdate = useSelector(state => state.userUpdate);
+  const { loading, success, error } = userUpdate;
 
-  return (
-    <div className="container small-container">
-      <Helmet>
-        <title>User Profile</title>
-      </Helmet>
-      <h1 className="my-3">User Profile</h1>
-      <form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </Form.Group>
-        <div className="mb-3">
-          <Button type="submit">Update</Button>
-        </div>
-      </form>
+  const myOrderList = useSelector(state => state.myOrderList);
+  const { loading: loadingOrders, orders, error: errorOrders } = myOrderList;
+  useEffect(() => {
+    if (userInfo) {
+      console.log(userInfo.name)
+      setEmail(userInfo.email);
+      setName(userInfo.name);
+      setPassword(userInfo.password);
+    }
+    dispatch(listMyOrders());
+    return () => {
+
+    };
+  }, [userInfo])
+
+  return <div className="profile">
+    <div className="profile-info">
+      <div className="form">
+        <form onSubmit={submitHandler} >
+          <ul className="form-container">
+            <li>
+              <h2>User Profile</h2>
+            </li>
+            <li>
+              {loading && <div>Loading...</div>}
+              {error && <div>{error}</div>}
+              {success && <div>Profile Saved Successfully.</div>}
+            </li>
+            <li>
+              <label htmlFor="name">
+                Name
+          </label>
+              <input value={name} type="name" name="name" id="name" onChange={(e) => setName(e.target.value)}>
+              </input>
+            </li>
+            <li>
+              <label htmlFor="email">
+                Email
+          </label>
+              <input value={email} type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)}>
+              </input>
+            </li>
+            <li>
+              <label htmlFor="password">Password</label>
+              <input value={password} type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)}>
+              </input>
+            </li>
+
+            <li>
+              <button type="submit" className="button primary">Update</button>
+            </li>
+            <li>
+              <button type="button" onClick={handleLogout} className="button secondary full-width">Logout</button>
+            </li>
+
+          </ul>
+        </form>
+      </div>
     </div>
-  );
+    <div className="profile-orders content-margined">
+      {
+        loadingOrders ? <div>Loading...</div> :
+          errorOrders ? <div>{errorOrders} </div> :
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>DATE</th>
+                  <th>TOTAL</th>
+                  <th>PAID</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(order => <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt}</td>
+                  <td>{order.totalPrice}</td>
+                  <td>{order.isPaid}</td>
+                  <td>
+                    <Link to={"/order/" + order._id}>DETAILS</Link>
+                  </td>
+                </tr>)}
+              </tbody>
+            </table>
+      }
+    </div>
+  </div>
 }
+
+export default ProfileScreen;

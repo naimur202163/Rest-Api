@@ -1,37 +1,44 @@
 import React from "react";
-import { Route } from "react-router-dom";
-import { BrowserRouter, Routes, Link } from "react-router-dom";
-import HomeScreen from "./screens/HomeScreen";
+import { BrowserRouter, Route } from "react-router-dom";
 import "./App.css";
+import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
-import { Container, Navbar } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="d-flex flex-column site-container">
-        <header>
-          <Navbar bg="dark" variant="dark">
-            <Container>
-              <LinkContainer to="/">
-                <Navbar.Brand>Amozona</Navbar.Brand>
-              </LinkContainer>
-            </Container>
-          </Navbar>
-        </header>
+      <div>
+        <div class="grid-container">
+          <header class="header">
+            <div class="brand">
+              <button onclick="openMenu()">&#9776;</button>
+              <a href="index.html">amazona</a>
+            </div>
+            <div class="header-links">
+              <a href="cart.html">Cart</a>
+              <a href="signin.html">Sign In</a>
+            </div>
+          </header>
+          <aside class="sidebar">
+            <h3>Shopping Categories</h3>
+            <button class="sidebar-close-button" onclick="closeMenu()">
+              x
+            </button>
+            <ul>
+              <li>
+                <a href="index.html">Pants</a>
+              </li>
 
-        <main>
-          <Container>
-            <Routes>
-              <Route path="/product/:slug" element={<ProductScreen />} />
-              <Route path="/" element={<HomeScreen />}></Route>
-            </Routes>
-          </Container>
-        </main>
-
-        <footer>
-          <div className="text-center">All rights reserved</div>
-        </footer>
+              <li>
+                <a href="index.html">Shirts</a>
+              </li>
+            </ul>
+          </aside>
+          <main className="main">
+            <Route path="/product/:id" component={ProductScreen}></Route>
+            <Route path="/" component={HomeScreen} exact></Route>
+          </main>
+          <footer className="footer">All right reserved.</footer>
+        </div>
       </div>
     </BrowserRouter>
   );

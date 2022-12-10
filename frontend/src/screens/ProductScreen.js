@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import { useDispatch } from "react-redux";
@@ -6,12 +6,16 @@ import { useSelector } from "react-redux";
 import { detailsProduct } from "../actions/productActions";
 export default function ProductScreen(props) {
   const productId = props.match.params.id;
+  const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { product, loading, error } = productDetails;
   useEffect(() => {
     dispatch(detailsProduct(productId));
   }, [dispatch, productId]);
+  const addToCartHandler = () => {
+    props.history.push(`/cart/${productId}?qty=${qty}`);
+  };
   return (
     <div className="container">
       <Link to="/">Back to Home</Link>
@@ -72,11 +76,27 @@ export default function ProductScreen(props) {
                         <div className="row">
                           <div>QTy</div>
                           <div>
-                            <select ></select>
+                            <select
+                              value={qty}
+                              onChange={(e) => setQty(e.target.value)}
+                            >
+                              {[...Array(product.countInStock).keys()].map(
+                                (x) => (
+                                  <option key={x + 1} value={x + 1}>
+                                    {x + 1}
+                                  </option>
+                                )
+                              )}
+                            </select>
                           </div>
                         </div>
                       </li>
-                      <button className="button primary   ">Add to Cart</button>
+                      <button
+                        onClick={addToCartHandler}
+                        className="button primary   "
+                      >
+                        Add to Cart
+                      </button>
                     </li>
                   </>
                 )}

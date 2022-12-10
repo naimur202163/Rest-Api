@@ -64,9 +64,22 @@ export default function ProductScreen(props) {
                     </div>
                   </div>
                 </li>
-                <li>
-                  <button className="button primary   ">Add to Cart</button>
-                </li>
+
+                {product.countInStock > 0 && (
+                  <>
+                    <li>
+                      <li>
+                        <div className="row">
+                          <div>QTy</div>
+                          <div>
+                            <select ></select>
+                          </div>
+                        </div>
+                      </li>
+                      <button className="button primary   ">Add to Cart</button>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

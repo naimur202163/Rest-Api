@@ -10,7 +10,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     dispatch(listProducts());
-  }, []);
+  }, [dispatch]);
   return (
     <div>
       <h2>This is Home Page</h2>

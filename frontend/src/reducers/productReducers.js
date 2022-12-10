@@ -7,6 +7,7 @@ import {
   PRODUCT_DETAILS_REQUEST,
 } from "./../constants/productConstants";
 
+// ProductListReducer
 function productListReducer(state = { products: [] }, action) {
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
@@ -20,33 +21,15 @@ function productListReducer(state = { products: [] }, action) {
   }
 }
 // Product Details Reducers
-function productDetailsReducer(
-  state = {
-    product: {},
-    loading: true,
-  },
-  action
-) {
+
+function productDetailsReducer(state = { product: {} }, action) {
   switch (action.type) {
     case PRODUCT_DETAILS_REQUEST:
-      return {
-        loading: true,
-        product: {},
-      };
-
+      return { loading: true };
     case PRODUCT_DETAILS_SUCCESS:
-      return {
-        loading: false,
-        product: action.payload,
-      };
-
+      return { loading: false, product: action.payload };
     case PRODUCT_DETAILS_FAIL:
-      return {
-        loading: false,
-
-        error: action.payload,
-      };
-
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
